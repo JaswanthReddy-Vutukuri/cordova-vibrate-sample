@@ -1,0 +1,4 @@
+platforms/
+plugins/
+!.keep
+node_modules/
