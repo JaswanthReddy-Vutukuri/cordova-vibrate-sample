@@ -1,22 +1,28 @@
 document.addEventListener("deviceready", init);
 function init() {
-
-    document.querySelector("#takeVideo").addEventListener("touchend", function () {
-        console.log("Take video");
-        navigator.device.capture.captureVideo(captureSuccess, captureError, { limit: 1 });
-    }, false);
-
-}
-
-function captureError(e) {
-    console.log("capture error: " + JSON.stringify(e));
-}
-
-function captureSuccess(s) {
-    console.log("Success");
-    console.dir(s[0]);
-    var v = "<video controls='controls'>";
-    v += "<source src='" + s[0].fullPath + "' type='video/mp4'>";
-    v += "</video>";
-    document.querySelector("#videoArea").innerHTML = v;
+    function onSuccess(imageData) {
+        console.log('success');
+        var image = document.getElementById('myImage');
+        image.src = imageData;
+    }
+    function onFail(message) {
+        navigator.notification.alert(
+            message, null, "Camera Failure");
+    }
+    //Use from Camera
+    document.querySelector("#takePicture").addEventListener("touchend", function () {
+        navigator.camera.getPicture(onSuccess, onFail, {
+            quality: 50,
+            sourceType: Camera.PictureSourceType.CAMERA,
+            destinationType: Camera.DestinationType.FILE_URI
+        });
+    });
+    //Use from Library
+    document.querySelector("#usePicture").addEventListener("touchend", function () {
+        navigator.camera.getPicture(onSuccess, onFail, {
+            quality: 50,
+            sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
+            destinationType: Camera.DestinationType.FILE_URI
+        });
+    });
 }
