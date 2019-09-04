@@ -1,30 +1,22 @@
-// document.getElementById("vibration").addEventListener("click", vibration);
-// document.getElementById("vibrationPattern").addEventListener("click", vibrationPattern);
-// function vibration() {
-//     var time = 3000;
-//     navigator.vibrate(time);
-// }
+document.addEventListener("deviceready", init);
+function init() {
 
-// function vibrationPattern() {
-//     var pattern = [1000, 1000, 1000, 1000, 1000];
-//     navigator.vibrate(pattern);
-//     // Vibrate for 1 second
-//     // Wait for 1 second
-//     // Vibrate for 3 seconds
-//     // Wait for 1 second
-//     // Vibrate for 5 seconds
-//     //navigator.vibrate([1000, 1000, 3000, 1000, 5000]);
-// }
+    document.querySelector("#takeVideo").addEventListener("touchend", function () {
+        console.log("Take video");
+        navigator.device.capture.captureVideo(captureSuccess, captureError, { limit: 1 });
+    }, false);
 
-navigator.camera.getPicture(onSuccess, onFail, { quality: 25,
-    destinationType: Camera.DestinationType.DATA_URL
-});
-
-function onSuccess(imageData) {
-    var image = document.getElementById('myImage');
-    image.src = "data:image/jpeg;base64," + imageData;
 }
 
-function onFail(message) {
-    alert('Failed because: ' + message);
+function captureError(e) {
+    console.log("capture error: " + JSON.stringify(e));
+}
+
+function captureSuccess(s) {
+    console.log("Success");
+    console.dir(s[0]);
+    var v = "<video controls='controls'>";
+    v += "<source src='" + s[0].fullPath + "' type='video/mp4'>";
+    v += "</video>";
+    document.querySelector("#videoArea").innerHTML = v;
 }
